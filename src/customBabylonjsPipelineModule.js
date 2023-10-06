@@ -9,12 +9,6 @@ import bubbleColorTextureUrl from "/textures/Bubble.png";
 import envTextureUrl from "/textures/env.jpg";
 import bubbleModelUrl from "/models/uvSphere.glb";
 import cubeTextureUrl from "/cubeTexture/?url";
-import nx from "/textures/nx.jpg";
-import ny from "/textures/ny.jpg";
-import nz from "/textures/nz.jpg";
-import px from "/textures/px.jpg";
-import py from "/textures/py.jpg";
-import pz from "/textures/pz.jpg";
 
 export const customBabylonjsPipelineModule = async () => {
   //setup
@@ -64,23 +58,7 @@ export const customBabylonjsPipelineModule = async () => {
 
   //cubeTextureの読み込み
   const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene);
-  // const cubeTexture = new BABYLON.CubeTexture("", scene);
-  // cubeTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
 
-  // cubeTexture._textures = [
-  //   new BABYLON.Texture(nx, scene),
-  //   new BABYLON.Texture(ny, scene),
-  //   new BABYLON.Texture(nz, scene),
-  //   new BABYLON.Texture(px, scene),
-  //   new BABYLON.Texture(py, scene),
-  //   new BABYLON.Texture(pz, scene),
-  // ];
-
-  console.log(cubeTexture);
-
-  // const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene);
-
-  const material = new BABYLON.StandardMaterial("test", scene);
   var shaderMaterial = new BABYLON.ShaderMaterial(
     "shaderMaterial",
     scene,
