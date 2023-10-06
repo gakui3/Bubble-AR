@@ -8,7 +8,7 @@ import eyeLighPathTextureUrl from "/textures/EyeLightPath.png";
 import bubbleColorTextureUrl from "/textures/Bubble.png";
 import envTextureUrl from "/textures/env.jpg";
 import bubbleModelUrl from "/models/uvSphere.glb";
-import cubeTextureUrl from "/cubeTexture/?url";
+// import cubeTextureUrl from "/cubeTexture/?url";
 
 export const customBabylonjsPipelineModule = async () => {
   //setup
@@ -57,7 +57,8 @@ export const customBabylonjsPipelineModule = async () => {
   light.position = new BABYLON.Vector3(3, 5, 0);
 
   //cubeTextureの読み込み
-  const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene);
+  // const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene); /cubeTexture/
+  const cubeTexture = new BABYLON.CubeTexture("/cubeTexture/", scene);
 
   const material = new BABYLON.StandardMaterial("test", scene);
   var shaderMaterial = new BABYLON.ShaderMaterial(
