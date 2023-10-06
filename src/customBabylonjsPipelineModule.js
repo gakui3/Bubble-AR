@@ -9,13 +9,12 @@ import bubbleColorTextureUrl from "/textures/Bubble.png";
 import envTextureUrl from "/textures/env.jpg";
 import bubbleModelUrl from "/models/uvSphere.glb";
 import cubeTextureUrl from "/cubeTexture/?url";
-import nx from "/cubeTexture/_nx.jpg";
-import ny from "/cubeTexture/_ny.jpg";
-import nz from "/cubeTexture/_nz.jpg";
-import px from "/cubeTexture/_px.jpg";
-import py from "/cubeTexture/_py.jpg";
-import pz from "/cubeTexture/_pz.jpg";
-import test from "/textures/nx.jpg";
+import nx from "/textures/nx.jpg";
+import ny from "/textures/ny.jpg";
+import nz from "/textures/nz.jpg";
+import px from "/textures/px.jpg";
+import py from "/textures/py.jpg";
+import pz from "/textures/pz.jpg";
 
 export const customBabylonjsPipelineModule = async () => {
   //setup
@@ -64,15 +63,22 @@ export const customBabylonjsPipelineModule = async () => {
   light.position = new BABYLON.Vector3(3, 5, 0);
 
   //cubeTextureの読み込み
-  // const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene); /cubeTexture/
-  const pxTexture = new BABYLON.Texture(px, scene);
-  const pyTexture = new BABYLON.Texture(py, scene);
-  const pzTexture = new BABYLON.Texture(pz, scene);
-  const nxTexture = new BABYLON.Texture(nx, scene);
-  const nyTexture = new BABYLON.Texture(ny, scene);
-  const nzTexture = new BABYLON.Texture(nz, scene);
-
   const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene);
+  // const cubeTexture = new BABYLON.CubeTexture("", scene);
+  // cubeTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+
+  // cubeTexture._textures = [
+  //   new BABYLON.Texture(nx, scene),
+  //   new BABYLON.Texture(ny, scene),
+  //   new BABYLON.Texture(nz, scene),
+  //   new BABYLON.Texture(px, scene),
+  //   new BABYLON.Texture(py, scene),
+  //   new BABYLON.Texture(pz, scene),
+  // ];
+
+  console.log(cubeTexture);
+
+  // const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene);
 
   const material = new BABYLON.StandardMaterial("test", scene);
   var shaderMaterial = new BABYLON.ShaderMaterial(
