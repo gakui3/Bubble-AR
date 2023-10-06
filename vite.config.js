@@ -15,7 +15,7 @@ module.exports = {
     "**/*.mp4",
     "**/*.webp",
     "**/*.png",
-    "**/**/*.jpg",
+    "**/*.jpg",
   ],
   build: {
     outDir: "docs",

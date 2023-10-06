@@ -8,7 +8,7 @@ import eyeLighPathTextureUrl from "/textures/EyeLightPath.png";
 import bubbleColorTextureUrl from "/textures/Bubble.png";
 import envTextureUrl from "/textures/env.jpg";
 import bubbleModelUrl from "/models/uvSphere.glb";
-import cubeTextureUrl from "/textures/cubeTexture/?url";
+import cubeTextureUrl from "/cubeTexture/?url";
 
 export const customBabylonjsPipelineModule = async () => {
   //setup
