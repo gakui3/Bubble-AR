@@ -9,6 +9,12 @@ import bubbleColorTextureUrl from "/textures/Bubble.png";
 import envTextureUrl from "/textures/env.jpg";
 import bubbleModelUrl from "/models/uvSphere.glb";
 // import cubeTextureUrl from "/cubeTexture/?url";
+import nx from "/cubeTexture/_nx.jpg";
+import ny from "/cubeTexture/_ny.jpg";
+import nz from "/cubeTexture/_nz.jpg";
+import px from "/cubeTexture/_px.jpg";
+import py from "/cubeTexture/_py.jpg";
+import pz from "/cubeTexture/_pz.jpg";
 
 export const customBabylonjsPipelineModule = async () => {
   //setup
