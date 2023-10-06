@@ -15,6 +15,7 @@ import nz from "/cubeTexture/_nz.jpg";
 import px from "/cubeTexture/_px.jpg";
 import py from "/cubeTexture/_py.jpg";
 import pz from "/cubeTexture/_pz.jpg";
+import test from "/textures/nx.jpg";
 
 export const customBabylonjsPipelineModule = async () => {
   //setup
@@ -70,6 +71,7 @@ export const customBabylonjsPipelineModule = async () => {
   const nxTexture = new BABYLON.Texture(nx, scene);
   const nyTexture = new BABYLON.Texture(ny, scene);
   const nzTexture = new BABYLON.Texture(nz, scene);
+
   const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene);
 
   const material = new BABYLON.StandardMaterial("test", scene);
