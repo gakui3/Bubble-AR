@@ -20,5 +20,5 @@ module.exports = {
   build: {
     outDir: "docs",
   },
-  // base: "/Bubble-AR/",
+  base: "/Bubble-AR/",
 };
