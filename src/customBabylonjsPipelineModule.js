@@ -8,7 +8,7 @@ import eyeLighPathTextureUrl from "/textures/EyeLightPath.png";
 import bubbleColorTextureUrl from "/textures/Bubble.png";
 import envTextureUrl from "/textures/env.jpg";
 import bubbleModelUrl from "/models/uvSphere.glb";
-// import cubeTextureUrl from "/cubeTexture/?url";
+import cubeTextureUrl from "/cubeTexture/?url";
 import nx from "/cubeTexture/_nx.jpg";
 import ny from "/cubeTexture/_ny.jpg";
 import nz from "/cubeTexture/_nz.jpg";
@@ -70,7 +70,7 @@ export const customBabylonjsPipelineModule = async () => {
   const nxTexture = new BABYLON.Texture(nx, scene);
   const nyTexture = new BABYLON.Texture(ny, scene);
   const nzTexture = new BABYLON.Texture(nz, scene);
-  const cubeTexture = new BABYLON.CubeTexture("/Bubble-AR/cubeTexture/", scene);
+  const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene);
 
   const material = new BABYLON.StandardMaterial("test", scene);
   var shaderMaterial = new BABYLON.ShaderMaterial(
