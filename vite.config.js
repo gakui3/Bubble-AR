@@ -20,5 +20,5 @@ module.exports = {
   build: {
     outDir: "docs",
   },
-  // base: "/8thwall-Babylonjs-Bubble/",
+  // base: "/Bubble-AR/",
 };
