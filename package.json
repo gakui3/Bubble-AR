@@ -1,0 +1,29 @@
+{
+  "name": "gucci-hanami",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/webpack",
+    "watch": "./node_modules/.bin/webpack -w",
+    "start": "webpack-dev-server --https"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheDesignium/GUCCI-HANAMI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheDesignium/GUCCI-HANAMI/issues"
+  },
+  "homepage": "https://github.com/TheDesignium/GUCCI-HANAMI#readme",
+  "dependencies": {
+    "@vitejs/plugin-basic-ssl": "^1.0.1",
+    "babylonjs": "^5.57.1",
+    "babylonjs-loaders": "^5.57.1",
+    "babylonjs-materials": "^6.23.0",
+    "vite": "^4.4.7"
+  }
+}
