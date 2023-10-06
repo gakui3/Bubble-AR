@@ -18,9 +18,6 @@ module.exports = {
     "**/*.jpg",
   ],
   build: {
-    rollupOptions: {
-      external: ["/cubeTexture/?url"],
-    },
     outDir: "docs",
   },
   base: "/Bubble-AR/",
