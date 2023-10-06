@@ -58,7 +58,7 @@ export const customBabylonjsPipelineModule = async () => {
 
   //cubeTextureの読み込み
   // const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene); /cubeTexture/
-  const cubeTexture = new BABYLON.CubeTexture("/cubeTexture/", scene);
+  const cubeTexture = new BABYLON.CubeTexture("/Bubble-AR/cubeTexture/", scene);
 
   const material = new BABYLON.StandardMaterial("test", scene);
   var shaderMaterial = new BABYLON.ShaderMaterial(
