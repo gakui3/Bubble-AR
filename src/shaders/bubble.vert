@@ -46,8 +46,9 @@ void main(void) {
     //
 
     //頂点を法線方向にうねうねさせる
-    float d =  texture(vertexNoiseTexture, vUV).x;
-    vec3 v = vNormal * d * 0.1;
-    vec3 p = position + v;
-    gl_Position = worldViewProjection * vec4(p, 1.0);
+    // float d =  abs(texture(vertexNoiseTexture, vUV).x);
+    // vec3 v = vNormal * d * 0.45 + 0.25;
+    // vec3 p = position + v;
+    // gl_Position = worldViewProjection * vec4(p, 1.0);
+    gl_Position = worldViewProjection * vec4(position, 1.0);
 }

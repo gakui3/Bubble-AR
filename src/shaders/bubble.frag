@@ -24,7 +24,7 @@ uniform vec3 lightPosition;
 out vec4 fragColor;
 
 void main(void) {
-    float d =  texture(noiseTexture, vUV).x;
+    float d =  texture(noiseTexture, vUV).x * 0.5 + 0.2;
     // float d =  1.0;float d =  texture(noiseTexture, vUV).x;
 
     float theta_L = dot(vObjSpaceLightDir, vNormal) * 0.5 * d; //0~0.5
