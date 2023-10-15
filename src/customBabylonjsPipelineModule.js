@@ -116,7 +116,7 @@ export const customBabylonjsPipelineModule = async () => {
 
   bubble.meshes[1].material = shaderMaterial;
 
-  const bubblesCount = 50;
+  const bubblesCount = 30;
   //particleの準備
   const sps = new BABYLON.SolidParticleSystem("SPS", scene, {
     useModelMaterial: true,
@@ -133,12 +133,12 @@ export const customBabylonjsPipelineModule = async () => {
 
   sps.recycleParticle = function (particle) {
     particle.position.x = (Math.random() - 0.5) * 5;
-    particle.position.y = -5;
+    particle.position.y = -4;
     particle.position.z = Math.random() + 1.0;
 
-    particle.velocity.x = (Math.random() - 0.5) * 0.03;
-    particle.velocity.y = (Math.random() + 0.5) * 0.025;
-    // particle.velocity.z = (Math.random() - 0.5) * 0.06;
+    particle.velocity.x = (Math.random() - 0.5) * 0.005;
+    particle.velocity.y = (Math.random() + 0.5) * 0.01;
+    // particle.velocity.z = (Math.random() - 0.5) * 0.005;
 
     particle.rotation.x = Math.random() * Math.PI * 2;
     particle.rotation.y = Math.random() * Math.PI * 2;
@@ -150,7 +150,7 @@ export const customBabylonjsPipelineModule = async () => {
 
   let time = 0;
   sps.updateParticle = function (particle) {
-    if (particle.position.y > 10) {
+    if (particle.position.y > 8) {
       sps.recycleParticle(particle);
     }
     particle.position.addInPlace(particle.velocity);
@@ -158,7 +158,7 @@ export const customBabylonjsPipelineModule = async () => {
     //timeを更新
     time += 0.01;
     //particleのスケールを時経過間でpingpongさせる
-    const v = Math.sin(time * 0.05 + particle.idx) * 0.5 + 0.5;
+    const v = Math.sin(time * 0.02 + particle.idx) * 0.5 + 0.5;
     const scale = mapValue(v, 0, 1, 0.3, 0.6);
     particle.scaling = new BABYLON.Vector3(scale, scale, scale);
   };
