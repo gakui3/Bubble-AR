@@ -38,7 +38,7 @@ void main(void) {
 
     // vec4 col1 = vec4(0.5, 0.5, 0.5, 1.0);
     vec4 col = texture(bubbleColorTexture, vec2(u,v));
-    vec4 c = vec4(col.xyz, 0.25);
+    vec4 c = vec4(col.xyz, 0.20);
 
     //フレネス
     float rim = 1.0 - abs(dot(vWorldNormal, vCameraDirection));

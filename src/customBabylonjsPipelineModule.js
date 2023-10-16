@@ -5,7 +5,7 @@ import "babylonjs-loaders";
 import BubbleVert from "./shaders/bubble.vert?raw";
 import BubbleFrag from "./shaders/bubble.frag?raw";
 import eyeLighPathTextureUrl from "/textures/EyeLightPath.png";
-import bubbleColorTextureUrl from "/textures/Bubble.png";
+import bubbleColorTextureUrl from "/textures/02.png"; //"/textures/Bubble.png";
 import envTextureUrl from "/textures/env.jpg";
 import bubbleModelUrl from "/models/uvSphereRe.glb";
 import cubeTextureUrl from "/cubeTexture/?url";
