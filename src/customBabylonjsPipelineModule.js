@@ -159,7 +159,7 @@ export const customBabylonjsPipelineModule = async () => {
     time += 0.01;
     //particleのスケールを時経過間でpingpongさせる
     const v = Math.sin(time * 0.02 + particle.idx) * 0.5 + 0.5;
-    const scale = mapValue(v, 0, 1, 0.25, 0.4);
+    const scale = mapValue(v, 0, 1, 0.2, 0.25);
     particle.scaling = new BABYLON.Vector3(scale, scale, scale);
 
     //particleの回転を更新
