@@ -136,9 +136,9 @@ export const customBabylonjsPipelineModule = async () => {
     particle.position.y = -2.5;
     particle.position.z = Math.random() + 1.0;
 
-    particle.velocity.x = (Math.random() - 0.5) * 0.0025;
-    particle.velocity.y = (Math.random() + 0.5) * 0.0075;
-    // particle.velocity.z = (Math.random() - 0.5) * 0.005;
+    particle.velocity.x = (Math.random() - 0.5) * 0.001;
+    particle.velocity.y = (Math.random() + 0.5) * 0.005;
+    particle.velocity.z = (Math.random() - 0.5) * 0.001;
 
     particle.rotation.x = Math.random() * Math.PI * 2;
     particle.rotation.y = Math.random() * Math.PI * 2;
@@ -150,7 +150,7 @@ export const customBabylonjsPipelineModule = async () => {
 
   let time = 0;
   sps.updateParticle = function (particle) {
-    if (particle.position.y > 5) {
+    if (particle.position.y > 3) {
       sps.recycleParticle(particle);
     }
     particle.position.addInPlace(particle.velocity);
