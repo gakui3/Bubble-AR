@@ -7,7 +7,7 @@ import BubbleFrag from "./shaders/bubble.frag?raw";
 import eyeLighPathTextureUrl from "/textures/EyeLightPath.png";
 import bubbleColorTextureUrl from "/textures/Bubble.png";
 import envTextureUrl from "/textures/env.jpg";
-import bubbleModelUrl from "/models/uvSphere.glb";
+import bubbleModelUrl from "/models/uvSphereRe.glb";
 import cubeTextureUrl from "/cubeTexture/?url";
 
 const mapValue = (value, oldMin, oldMax, newMin, newMax) => {
@@ -105,7 +105,6 @@ export const customBabylonjsPipelineModule = async () => {
     .join("/")
     .concat("/");
   const fileName = bubbleModelUrl.split("/").slice(-1)[0];
-  console.log(folderName, fileName);
 
   const bubble = await BABYLON.SceneLoader.LoadAssetContainerAsync(
     folderName,
@@ -125,7 +124,7 @@ export const customBabylonjsPipelineModule = async () => {
 
   //SPSの設定
   sps.buildMesh();
-  sps.mesh.hasVertexAlpha = true;
+  // sps.mesh.hasVertexAlpha = true;
 
   scene.registerBeforeRender(function () {
     sps.setParticles();
@@ -133,7 +132,7 @@ export const customBabylonjsPipelineModule = async () => {
 
   sps.recycleParticle = function (particle) {
     particle.position.x = (Math.random() - 0.5) * 5;
-    particle.position.y = -2.5;
+    particle.position.y = -1;
     particle.position.z = Math.random() + 1.0;
 
     particle.velocity.x = (Math.random() - 0.5) * 0.0005;

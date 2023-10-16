@@ -38,26 +38,28 @@ void main(void) {
 
     // vec4 col1 = vec4(0.5, 0.5, 0.5, 1.0);
     vec4 col = texture(bubbleColorTexture, vec2(u,v));
+    vec4 c = vec4(col.xyz, 0.25);
 
     //フレネス
     float rim = 1.0 - abs(dot(vWorldNormal, vCameraDirection));
-    vec3 rimCol = vec3(1.0, 1.0, 1.0) * pow(rim, 2.0) * 0.6;
-    col += vec4(rimCol, 0.0);
-
-    //環境マップの反射
-    vec3 reflectedDir = reflect(normalize(vPosition), vNormal);
-    vec3 color = texture(cubeMap, reflectedDir).xyz * 0.15;
-    col += vec4(color, 0.0);
+    vec3 rimCol = vec3(1.0, 1.0, 1.0) * pow(rim, 8.0);// * 0.8;
+    c += vec4(rimCol, 0.0);
 
     //スペキュラ
     vec3 lightDir = normalize(lightPosition - vPositionW);
     vec3 viewDir = normalize(vCameraDirection);
     vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(vWorldNormal, halfwayDir), 0.0), 20.0);
+    float spec = pow(max(dot(vWorldNormal, halfwayDir), 0.0), 50.0);
     vec3 specular = spec * vec3(1.0);
-    vec4 c = vec4(col.xyz, 0.15);
+
+    //フレネス値とカラーを乗算
     c.a *= rim;
-    c += vec4(specular, spec*0.6);
+    c += vec4(specular, spec);
+
+    //環境マップの反射
+    vec3 reflectedDir = reflect(normalize(vPosition), vNormal);
+    vec3 color = texture(cubeMap, reflectedDir).xyz;
+    c += vec4(color, 0.0);
 
     fragColor = c;//vec4(col.xyz, 0.3);//vec4(vNormal, 1.0);
 }
