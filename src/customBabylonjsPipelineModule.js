@@ -136,9 +136,9 @@ export const customBabylonjsPipelineModule = async () => {
     particle.position.y = -2.5;
     particle.position.z = Math.random() + 1.0;
 
-    particle.velocity.x = (Math.random() - 0.5) * 0.001;
-    particle.velocity.y = (Math.random() + 0.5) * 0.005;
-    particle.velocity.z = (Math.random() - 0.5) * 0.001;
+    particle.velocity.x = (Math.random() - 0.5) * 0.0005;
+    particle.velocity.y = (Math.random() + 0.5) * 0.0035;
+    particle.velocity.z = (Math.random() - 0.5) * 0.0005;
 
     particle.rotation.x = Math.random() * Math.PI * 2;
     particle.rotation.y = Math.random() * Math.PI * 2;
@@ -161,6 +161,9 @@ export const customBabylonjsPipelineModule = async () => {
     const v = Math.sin(time * 0.02 + particle.idx) * 0.5 + 0.5;
     const scale = mapValue(v, 0, 1, 0.25, 0.4);
     particle.scaling = new BABYLON.Vector3(scale, scale, scale);
+
+    //particleの回転を更新
+    particle.rotation.x += particle.velocity.x * 10;
   };
 
   sps.initParticles = function () {
