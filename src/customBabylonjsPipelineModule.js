@@ -133,11 +133,11 @@ export const customBabylonjsPipelineModule = async () => {
 
   sps.recycleParticle = function (particle) {
     particle.position.x = (Math.random() - 0.5) * 5;
-    particle.position.y = -4;
+    particle.position.y = -2.5;
     particle.position.z = Math.random() + 1.0;
 
-    particle.velocity.x = (Math.random() - 0.5) * 0.005;
-    particle.velocity.y = (Math.random() + 0.5) * 0.01;
+    particle.velocity.x = (Math.random() - 0.5) * 0.0025;
+    particle.velocity.y = (Math.random() + 0.5) * 0.0075;
     // particle.velocity.z = (Math.random() - 0.5) * 0.005;
 
     particle.rotation.x = Math.random() * Math.PI * 2;
@@ -150,7 +150,7 @@ export const customBabylonjsPipelineModule = async () => {
 
   let time = 0;
   sps.updateParticle = function (particle) {
-    if (particle.position.y > 8) {
+    if (particle.position.y > 5) {
       sps.recycleParticle(particle);
     }
     particle.position.addInPlace(particle.velocity);
@@ -159,7 +159,7 @@ export const customBabylonjsPipelineModule = async () => {
     time += 0.01;
     //particleのスケールを時経過間でpingpongさせる
     const v = Math.sin(time * 0.02 + particle.idx) * 0.5 + 0.5;
-    const scale = mapValue(v, 0, 1, 0.3, 0.6);
+    const scale = mapValue(v, 0, 1, 0.25, 0.4);
     particle.scaling = new BABYLON.Vector3(scale, scale, scale);
   };
 
