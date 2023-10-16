@@ -53,9 +53,11 @@ void main(void) {
     vec3 lightDir = normalize(lightPosition - vPositionW);
     vec3 viewDir = normalize(vCameraDirection);
     vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(vWorldNormal, halfwayDir), 0.0), 30.0);
+    float spec = pow(max(dot(vWorldNormal, halfwayDir), 0.0), 20.0);
     vec3 specular = spec * vec3(1.0);
-    col += vec4(specular, 0.0);
+    vec4 c = vec4(col.xyz, 0.15);
+    c.a *= rim;
+    c += vec4(specular, spec*0.6);
 
-    fragColor = vec4(col.xyz, 0.3);//vec4(vNormal, 1.0);
+    fragColor = c;//vec4(col.xyz, 0.3);//vec4(vNormal, 1.0);
 }
