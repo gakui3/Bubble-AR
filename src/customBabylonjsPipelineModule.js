@@ -1,5 +1,6 @@
 import * as BABYLON from "babylonjs";
 import "babylonjs-loaders";
+import {Noise} from "noisejs";
 
 // import "@babylonjs/loaders/glTF";
 import BubbleVert from "./shaders/bubble.vert?raw";
@@ -35,8 +36,8 @@ export const customBabylonjsPipelineModule = async () => {
   camera.fov = 1.0;
 
   var noiseTexture = new BABYLON.NoiseProceduralTexture("perlin", 256, scene);
-  noiseTexture.octaves = 1;
-  noiseTexture.persistence = 0.26;
+  noiseTexture.octaves = 3;
+  noiseTexture.persistence = 0.25;
   noiseTexture.animationSpeedFactor = 0.2;
 
   const vertexNoiseTexture = new BABYLON.NoiseProceduralTexture(
@@ -47,6 +48,8 @@ export const customBabylonjsPipelineModule = async () => {
   vertexNoiseTexture.octaves = 1.0;
   vertexNoiseTexture.persistence = 0.2;
   vertexNoiseTexture.animationSpeedFactor = 1.0;
+
+  const noise = new Noise(Math.random());
 
   // camera.attachControl(canvas, true);
   // let sphere;
@@ -115,7 +118,7 @@ export const customBabylonjsPipelineModule = async () => {
 
   bubble.meshes[1].material = shaderMaterial;
 
-  const bubblesCount = 30;
+  const bubblesCount = 50;
   //particleの準備
   const sps = new BABYLON.SolidParticleSystem("SPS", scene, {
     useModelMaterial: true,
@@ -131,43 +134,59 @@ export const customBabylonjsPipelineModule = async () => {
   });
 
   sps.recycleParticle = function (particle) {
-    particle.position.x = (Math.random() - 0.5) * 5;
-    particle.position.y = -1;
+    // sps.particles[p].position.x = (Math.random() - 0.5) * 2.5;
+    //   sps.particles[p].position.y = (Math.random() - 0.5) * 2.5;
+    //   sps.particles[p].position.z = Math.random() + 1.0;
+    particle.position.x = (Math.random() - 0.5) * 2.5;
+    particle.position.y = (Math.random() - 0.5) * 2.5;
     particle.position.z = Math.random() + 1.0;
 
-    particle.velocity.x = (Math.random() - 0.5) * 0.0005;
-    particle.velocity.y = (Math.random() + 0.5) * 0.0035;
-    particle.velocity.z = (Math.random() - 0.5) * 0.0005;
+    // particle.velocity.x = (Math.random() - 0.5) * 0.0005;
+    particle.velocity.y = -Math.random() * 0.0015;
+    // particle.velocity.z = (Math.random() - 0.5) * 0.0005;
 
     particle.rotation.x = Math.random() * Math.PI * 2;
     particle.rotation.y = Math.random() * Math.PI * 2;
     particle.rotation.z = Math.random() * Math.PI * 2;
 
-    const s = BABYLON.Scalar.RandomRange(0.5, 1.0);
+    const s = BABYLON.Scalar.RandomRange(0.1, 0.2);
     particle.scaling = new BABYLON.Vector3(s, s, s);
   };
 
   let time = 0;
   sps.updateParticle = function (particle) {
-    if (particle.position.y > 3) {
+    if (particle.position.y < -1.0) {
       sps.recycleParticle(particle);
     }
     particle.position.addInPlace(particle.velocity);
 
     //timeを更新
     time += 0.01;
+
     //particleのスケールを時経過間でpingpongさせる
-    const v = Math.sin(time * 0.02 + particle.idx) * 0.5 + 0.5;
-    const scale = mapValue(v, 0, 1, 0.2, 0.25);
-    particle.scaling = new BABYLON.Vector3(scale, scale, scale);
+    // const v = Math.sin(time * 0.02 + particle.idx) * 0.5 + 0.5;
+    // const scale = mapValue(v, 0, 1, 0.2, 0.25);
+    // particle.scaling = new BABYLON.Vector3(scale, scale, scale);
 
     //particleの回転を更新
     particle.rotation.x += particle.velocity.x * 10;
+
+    //particleの速度を更新
+    const value = noise.perlin2(particle.scaling.x * 50, time);
+    particle.velocity.x += value * 0.03 * 0.01;
+    particle.velocity.z += value * 0.03 * 0.005;
   };
 
   sps.initParticles = function () {
     for (let p = 0; p < sps.nbParticles; p++) {
-      sps.particles[p].velocity.y = Math.random() + 0.01;
+      sps.particles[p].position.x = (Math.random() - 0.5) * 2.5;
+      sps.particles[p].position.y = (Math.random() - 0.5) * 2.5;
+      sps.particles[p].position.z = Math.random() + 1.0;
+
+      const s = BABYLON.Scalar.RandomRange(0.1, 0.2);
+      sps.particles[p].scaling = new BABYLON.Vector3(s, s, s);
+
+      sps.particles[p].velocity.y = -Math.random() * 0.0015;
     }
   };
   sps.initParticles();

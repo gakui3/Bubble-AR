@@ -23,9 +23,37 @@ uniform vec3 lightPosition;
 
 out vec4 fragColor;
 
+float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
+vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
+vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
+
+float noise(vec3 p){
+    vec3 a = floor(p);
+    vec3 d = p - a;
+    d = d * d * (3.0 - 2.0 * d);
+
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy);
+    vec4 k2 = perm(k1.xyxy + b.zzww);
+
+    vec4 c = k2 + a.zzzz;
+    vec4 k3 = perm(c);
+    vec4 k4 = perm(c + 1.0);
+
+    vec4 o1 = fract(k3 * (1.0 / 41.0));
+    vec4 o2 = fract(k4 * (1.0 / 41.0));
+
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
 void main(void) {
-    float d =  texture(noiseTexture, vUV).x * 0.5 + 0.2;
+
+    // float d =  texture(noiseTexture, vUV).x * 0.5 + 0.1;
     // float d =  1.0;float d =  texture(noiseTexture, vUV).x;
+    float d = noise(vPosition.xyz);
 
     float theta_L = dot(vObjSpaceLightDir, vNormal) * 0.5 * d; //0~0.5
     float phi_L = (dot(vObjSpaceLightDir, vTangent) + 1.0) * 0.5 * d; //-1~1
@@ -36,25 +64,25 @@ void main(void) {
     float u = texture(eyeLighPathTexture, vec2(theta_L, phi_L)).x;
     float v = texture(eyeLighPathTexture, vec2(theta_E, phi_E)).x;
 
-    // vec4 col1 = vec4(0.5, 0.5, 0.5, 1.0);
     vec4 col = texture(bubbleColorTexture, vec2(u,v));
     vec4 c = vec4(col.xyz, 0.20);
 
     //フレネス
-    float rim = 1.0 - abs(dot(vWorldNormal, vCameraDirection));
+    float rim = pow(1.0 - abs(dot(vWorldNormal, vCameraDirection)), 3.0);
     vec3 rimCol = vec3(1.0, 1.0, 1.0) * pow(rim, 8.0);// * 0.8;
     c += vec4(rimCol, 0.0);
+    c.a *= rim;
 
     //スペキュラ
+    // vec3 lp = vec3(10, 100, 1);
+    // vec3 lightDir = normalize(lp - vPosition);
     vec3 lightDir = normalize(lightPosition - vPositionW);
     vec3 viewDir = normalize(vCameraDirection);
     vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(vWorldNormal, halfwayDir), 0.0), 50.0);
-    vec3 specular = spec * vec3(1.0);
-
-    //フレネス値とカラーを乗算
-    c.a *= rim;
-    c += vec4(specular, spec);
+    float spec = pow(max(abs(dot(vWorldNormal, halfwayDir)), 0.0), 50.0);
+    float result = step(0.3, spec) * spec;
+    vec3 specular = result * vec3(1.0);
+    c += vec4(specular, result*0.125);
 
     //環境マップの反射
     vec3 reflectedDir = reflect(normalize(vPosition), vNormal);
