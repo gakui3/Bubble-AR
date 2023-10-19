@@ -1,6 +1,7 @@
 import * as BABYLON from "babylonjs";
 import "babylonjs-loaders";
 import {Noise} from "noisejs";
+import GUI from "lil-gui";
 
 // import "@babylonjs/loaders/glTF";
 import BubbleVert from "./shaders/bubble.vert?raw";
@@ -51,6 +52,17 @@ export const customBabylonjsPipelineModule = async () => {
 
   const noise = new Noise(Math.random());
 
+  const params = {
+    myBoolean: true,
+    refrectionStrength: 0.2,
+    hilightStrength: 0.125,
+    hilightScale: 50,
+    colorSaturation: 0.25,
+    colorAlpha: 0.2,
+    fresnelScale: 3.0,
+    fresnelStrength: 8.0,
+  };
+
   // camera.attachControl(canvas, true);
   // let sphere;
 
@@ -61,7 +73,7 @@ export const customBabylonjsPipelineModule = async () => {
     scene
   );
   light.intensity = 1.0;
-  light.position = new BABYLON.Vector3(3, 5, 0);
+  light.position = new BABYLON.Vector3(3, 5, 2);
 
   //cubeTextureの読み込み
   const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene);
@@ -101,6 +113,39 @@ export const customBabylonjsPipelineModule = async () => {
   shaderMaterial.setTexture("cubeMap", cubeTexture);
   shaderMaterial.backFaceCulling = false;
   shaderMaterial.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
+
+  shaderMaterial.setFloat("refrectionStrength", params.refrectionStrength);
+  shaderMaterial.setFloat("hilightStrength", params.hilightStrength);
+  shaderMaterial.setFloat("hilightScale", params.hilightScale);
+  shaderMaterial.setFloat("colorSaturation", params.colorSaturation);
+  shaderMaterial.setFloat("colorAlpha", params.colorAlpha);
+  shaderMaterial.setFloat("fresnelScale", params.fresnelScale);
+  shaderMaterial.setFloat("fresnelStrength", params.fresnelStrength);
+
+  //for gui
+  const gui = new GUI();
+  gui.add(params, "refrectionStrength", 0, 0.3).onChange((value) => {
+    shaderMaterial.setFloat("refrectionStrength", value);
+  });
+  gui.add(params, "hilightStrength", 0, 1.0).onChange((value) => {
+    shaderMaterial.setFloat("hilightStrength", value);
+  });
+  gui.add(params, "hilightScale", 1, 50).onChange((value) => {
+    shaderMaterial.setFloat("hilightScale", value);
+  });
+  gui.add(params, "colorSaturation", 0, 1.0).onChange((value) => {
+    shaderMaterial.setFloat("colorSaturation", value);
+  });
+  gui.add(params, "colorAlpha", 0, 1.0).onChange((value) => {
+    shaderMaterial.setFloat("colorAlpha", value);
+  });
+  gui.add(params, "fresnelScale", 1, 10.0).onChange((value) => {
+    shaderMaterial.setFloat("fresnelScale", value);
+  });
+  gui.add(params, "fresnelStrength", 1, 10.0).onChange((value) => {
+    shaderMaterial.setFloat("fresnelStrength", value);
+  });
+  //
 
   const folderName = bubbleModelUrl
     .split("/")
@@ -173,7 +218,7 @@ export const customBabylonjsPipelineModule = async () => {
 
     //particleの速度を更新
     const value = noise.perlin2(particle.scaling.x * 50, time);
-    particle.velocity.x += value * 0.03 * 0.01;
+    particle.velocity.x += value * 0.03 * 0.005;
     particle.velocity.z += value * 0.03 * 0.005;
   };
 

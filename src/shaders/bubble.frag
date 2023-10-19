@@ -21,6 +21,15 @@ uniform sampler2D envTexture;
 uniform samplerCube cubeMap;
 uniform vec3 lightPosition;
 
+//params
+uniform float refrectionStrength;
+uniform float hilightStrength;
+uniform float hilightScale;
+uniform float colorSaturation;
+uniform float colorAlpha;
+uniform float fresnelStrength;
+uniform float fresnelScale;
+
 out vec4 fragColor;
 
 float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
@@ -55,39 +64,45 @@ void main(void) {
     // float d =  1.0;float d =  texture(noiseTexture, vUV).x;
     float d = noise(vPosition.xyz);
 
-    float theta_L = dot(vObjSpaceLightDir, vNormal) * 0.5 * d; //0~0.5
+    float theta_L = dot(vObjSpaceLightDir, vWorldNormal) * 0.5 * d; //0~0.5
     float phi_L = (dot(vObjSpaceLightDir, vTangent) + 1.0) * 0.5 * d; //-1~1
 
-    float theta_E = ((1.0 - dot(vObjSpaceViewDir, vNormal)) * 0.5 + 0.5) * d; //0.5~1.0
+    float theta_E = ((1.0 - dot(vObjSpaceViewDir, vWorldNormal)) * 0.5 + 0.5) * d; //0.5~1.0
     float phi_E = (dot(vObjSpaceViewDir, vTangent) + 1.0) * 0.5 * d; //-1~1
 
     float u = texture(eyeLighPathTexture, vec2(theta_L, phi_L)).x;
     float v = texture(eyeLighPathTexture, vec2(theta_E, phi_E)).x;
 
     vec4 col = texture(bubbleColorTexture, vec2(u,v));
-    vec4 c = vec4(col.xyz, 0.20);
+    // vec4 c = vec4(col.xyz*colorSaturation, colorAlpha);
+    vec4 c = vec4(col.xyz * colorSaturation,  1.0);
 
-    //フレネス
+    //カラーフレネル
     float rim = pow(1.0 - abs(dot(vWorldNormal, vCameraDirection)), 3.0);
-    vec3 rimCol = vec3(1.0, 1.0, 1.0) * pow(rim, 8.0);// * 0.8;
-    c += vec4(rimCol, 0.0);
-    c.a *= rim;
+    vec3 rimCol = vec3(1.0, 1.0, 1.0) * pow(rim, 8.0);
+    c = vec4(rimCol, colorAlpha);
+    // c.a *= rim;
+
+    //フレネル
+    float rim1 = pow(1.0 - abs(dot(vWorldNormal, vCameraDirection)), fresnelScale);
+    vec3 rimCol1 = vec3(1.0, 1.0, 1.0) * pow(rim1, fresnelStrength);
+    c += vec4(rimCol1, rim1);
+    // c.a *= rim;
 
     //スペキュラ
-    // vec3 lp = vec3(10, 100, 1);
-    // vec3 lightDir = normalize(lp - vPosition);
     vec3 lightDir = normalize(lightPosition - vPositionW);
     vec3 viewDir = normalize(vCameraDirection);
-    vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(abs(dot(vWorldNormal, halfwayDir)), 0.0), 50.0);
-    float result = step(0.3, spec) * spec;
+    // vec3 halfwayDir = normalize(lightDir + viewDir);  
+    vec3 halfwayDir = reflect(lightDir, vWorldNormal);
+    float spec = pow(max(abs(dot(vWorldNormal, halfwayDir)), 0.0), hilightScale);
+    float result = step(0.2, spec) * spec;
     vec3 specular = result * vec3(1.0);
-    c += vec4(specular, result*0.125);
+    c += vec4(specular, result * hilightStrength);
 
     //環境マップの反射
     vec3 reflectedDir = reflect(normalize(vPosition), vNormal);
     vec3 color = texture(cubeMap, reflectedDir).xyz;
-    c += vec4(color, 0.0);
+    c += vec4(color, refrectionStrength);
 
     fragColor = c;//vec4(col.xyz, 0.3);//vec4(vNormal, 1.0);
 }
