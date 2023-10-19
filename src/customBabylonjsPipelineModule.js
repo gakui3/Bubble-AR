@@ -55,12 +55,14 @@ export const customBabylonjsPipelineModule = async () => {
   const params = {
     myBoolean: true,
     refrectionStrength: 0.2,
-    hilightStrength: 0.125,
-    hilightScale: 50,
-    colorSaturation: 0.25,
-    colorAlpha: 0.2,
+    highlightStrength: 0.125,
+    highlightScale: 1,
+    colorScale: 6.5,
+    colorStrength: 0.25,
+    transparency: 0.4,
     fresnelScale: 3.0,
     fresnelStrength: 8.0,
+    transformStrength: 0.5,
   };
 
   // camera.attachControl(canvas, true);
@@ -115,35 +117,43 @@ export const customBabylonjsPipelineModule = async () => {
   shaderMaterial.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
 
   shaderMaterial.setFloat("refrectionStrength", params.refrectionStrength);
-  shaderMaterial.setFloat("hilightStrength", params.hilightStrength);
-  shaderMaterial.setFloat("hilightScale", params.hilightScale);
-  shaderMaterial.setFloat("colorSaturation", params.colorSaturation);
-  shaderMaterial.setFloat("colorAlpha", params.colorAlpha);
+  shaderMaterial.setFloat("highlightStrength", params.highlightStrength);
+  shaderMaterial.setFloat("highlightScale", params.highlightScale);
+  shaderMaterial.setFloat("colorScale", params.colorScale);
+  shaderMaterial.setFloat("colorStrength", params.colorStrength);
+  shaderMaterial.setFloat("transparency", params.transparency);
   shaderMaterial.setFloat("fresnelScale", params.fresnelScale);
   shaderMaterial.setFloat("fresnelStrength", params.fresnelStrength);
+  shaderMaterial.setFloat("transformStrength", params.transformStrength);
 
   //for gui
   const gui = new GUI();
-  gui.add(params, "refrectionStrength", 0, 0.3).onChange((value) => {
+  gui.add(params, "refrectionStrength", 0, 0.5).onChange((value) => {
     shaderMaterial.setFloat("refrectionStrength", value);
   });
-  gui.add(params, "hilightStrength", 0, 1.0).onChange((value) => {
-    shaderMaterial.setFloat("hilightStrength", value);
+  gui.add(params, "highlightStrength", 0, 1.0).onChange((value) => {
+    shaderMaterial.setFloat("highlightStrength", value);
   });
-  gui.add(params, "hilightScale", 1, 50).onChange((value) => {
-    shaderMaterial.setFloat("hilightScale", value);
+  gui.add(params, "highlightScale", 1, 50).onChange((value) => {
+    shaderMaterial.setFloat("highlightScale", value);
   });
-  gui.add(params, "colorSaturation", 0, 1.0).onChange((value) => {
-    shaderMaterial.setFloat("colorSaturation", value);
+  gui.add(params, "colorScale", 1, 10.0).onChange((value) => {
+    shaderMaterial.setFloat("colorScale", value);
   });
-  gui.add(params, "colorAlpha", 0, 1.0).onChange((value) => {
-    shaderMaterial.setFloat("colorAlpha", value);
+  gui.add(params, "colorStrength", 0, 1.0).onChange((value) => {
+    shaderMaterial.setFloat("colorStrength", value);
   });
   gui.add(params, "fresnelScale", 1, 10.0).onChange((value) => {
     shaderMaterial.setFloat("fresnelScale", value);
   });
   gui.add(params, "fresnelStrength", 1, 10.0).onChange((value) => {
     shaderMaterial.setFloat("fresnelStrength", value);
+  });
+  gui.add(params, "transparency", 0, 1.0).onChange((value) => {
+    shaderMaterial.setFloat("transparency", value);
+  });
+  gui.add(params, "transformStrength", 0, 1.0).onChange((value) => {
+    shaderMaterial.setFloat("transformStrength", value);
   });
   //
 

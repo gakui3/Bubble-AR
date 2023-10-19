@@ -23,10 +23,11 @@ uniform vec3 lightPosition;
 
 //params
 uniform float refrectionStrength;
-uniform float hilightStrength;
-uniform float hilightScale;
-uniform float colorSaturation;
-uniform float colorAlpha;
+uniform float highlightStrength;
+uniform float highlightScale;
+uniform float colorScale;
+uniform float colorStrength;
+uniform float transparency;
 uniform float fresnelStrength;
 uniform float fresnelScale;
 
@@ -74,18 +75,17 @@ void main(void) {
     float v = texture(eyeLighPathTexture, vec2(theta_E, phi_E)).x;
 
     vec4 col = texture(bubbleColorTexture, vec2(u,v));
-    // vec4 c = vec4(col.xyz*colorSaturation, colorAlpha);
-    vec4 c = vec4(col.xyz * colorSaturation,  1.0);
+    vec4 c = vec4(col.xyz,  1.0);
 
     //カラーフレネル
-    float rim = pow(1.0 - abs(dot(vWorldNormal, vCameraDirection)), 3.0);
-    vec3 rimCol = vec3(1.0, 1.0, 1.0) * pow(rim, 8.0);
-    c = vec4(rimCol, colorAlpha);
+    float rim = pow(1.0 - abs(dot(vWorldNormal, vCameraDirection)), 10.0-colorScale);
+    vec3 rimCol = c.xyz * colorStrength * rim;
+    c = vec4(rimCol, rim);
     // c.a *= rim;
 
     //フレネル
-    float rim1 = pow(1.0 - abs(dot(vWorldNormal, vCameraDirection)), fresnelScale);
-    vec3 rimCol1 = vec3(1.0, 1.0, 1.0) * pow(rim1, fresnelStrength);
+    float rim1 = pow(1.0 - abs(dot(vWorldNormal, vCameraDirection)), 10.0-fresnelScale);
+    vec3 rimCol1 = vec3(1.0, 1.0, 1.0) * pow(rim1, 10.0-fresnelStrength);
     c += vec4(rimCol1, rim1);
     // c.a *= rim;
 
@@ -94,15 +94,17 @@ void main(void) {
     vec3 viewDir = normalize(vCameraDirection);
     // vec3 halfwayDir = normalize(lightDir + viewDir);  
     vec3 halfwayDir = reflect(lightDir, vWorldNormal);
-    float spec = pow(max(abs(dot(vWorldNormal, halfwayDir)), 0.0), hilightScale);
+    float spec = pow(max(abs(dot(vWorldNormal, halfwayDir)), 0.0), 50.0-highlightScale);
     float result = step(0.2, spec) * spec;
     vec3 specular = result * vec3(1.0);
-    c += vec4(specular, result * hilightStrength);
+    c += vec4(specular, result * highlightStrength);
 
     //環境マップの反射
     vec3 reflectedDir = reflect(normalize(vPosition), vNormal);
     vec3 color = texture(cubeMap, reflectedDir).xyz;
     c += vec4(color, refrectionStrength);
 
+
+    c.a *= transparency;
     fragColor = c;//vec4(col.xyz, 0.3);//vec4(vNormal, 1.0);
 }
