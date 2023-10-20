@@ -24,6 +24,9 @@ uniform vec3 cameraPosition;
 uniform sampler2D noiseTexture;
 uniform sampler2D vertexNoiseTexture;
 uniform float transformStrength;
+uniform float transformSpeed;
+uniform float transformFrequency;
+uniform float time;
 
 float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
 vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
@@ -72,9 +75,9 @@ void main(void) {
     //
 
     //頂点を法線方向にうねうねさせる
-    float s = transformStrength * 10.0;
-    float d = noise(vec3(position.x * s, position.y * s, position.z * s));
-    vec3 v = vNormal * d * 0.05 + 0.25;
+    float s = 10.0 * transformFrequency;
+    float d = noise(vec3(position.x * s, position.y * s, position.y - time * transformSpeed *0.1));
+    vec3 v = vNormal * d * 0.25 *  transformStrength;
     vec3 p = position + v;
     gl_Position = worldViewProjection * vec4(p, 1.0);
 }

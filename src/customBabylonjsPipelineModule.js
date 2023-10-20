@@ -17,6 +17,7 @@ const mapValue = (value, oldMin, oldMax, newMin, newMax) => {
 };
 
 export const customBabylonjsPipelineModule = async () => {
+  let time = 0;
   //setup
   const canvas = document.getElementById("camerafeed");
   const engine = new BABYLON.Engine(canvas, true /* antialias */);
@@ -54,15 +55,20 @@ export const customBabylonjsPipelineModule = async () => {
 
   const params = {
     myBoolean: true,
-    refrectionStrength: 0.2,
-    highlightStrength: 0.125,
-    highlightScale: 1,
-    colorScale: 6.5,
-    colorStrength: 0.25,
+    refrectionStrength: 0.29,
+    highlightStrength: 0.3,
+    highlightScale: 16.5,
+    colorScale: 5.0,
+    colorStrength: 0.23,
     transparency: 0.4,
-    fresnelScale: 3.0,
-    fresnelStrength: 8.0,
-    transformStrength: 0.5,
+    fresnelScale: 5.3,
+    fresnelStrength: 6.0,
+    transformStrength: 0.45,
+    transformSpeed: 0.3,
+    transformFrequency: 0.5,
+    scaleRangeMin: 0.1,
+    scaleRangeMax: 0.3,
+    bubblesCount: 50,
   };
 
   // camera.attachControl(canvas, true);
@@ -124,36 +130,58 @@ export const customBabylonjsPipelineModule = async () => {
   shaderMaterial.setFloat("transparency", params.transparency);
   shaderMaterial.setFloat("fresnelScale", params.fresnelScale);
   shaderMaterial.setFloat("fresnelStrength", params.fresnelStrength);
+  shaderMaterial.setFloat("transformSpeed", params.transformSpeed);
   shaderMaterial.setFloat("transformStrength", params.transformStrength);
+  shaderMaterial.setFloat("transformFrequency", params.transformFrequency);
 
   //for gui
   const gui = new GUI();
-  gui.add(params, "refrectionStrength", 0, 0.5).onChange((value) => {
+  gui.close();
+
+  const shadeFolder = gui.addFolder("Shade");
+  shadeFolder.add(params, "refrectionStrength", 0, 0.5).onChange((value) => {
     shaderMaterial.setFloat("refrectionStrength", value);
   });
-  gui.add(params, "highlightStrength", 0, 1.0).onChange((value) => {
+  shadeFolder.add(params, "highlightStrength", 0, 1.0).onChange((value) => {
     shaderMaterial.setFloat("highlightStrength", value);
   });
-  gui.add(params, "highlightScale", 1, 50).onChange((value) => {
+  shadeFolder.add(params, "highlightScale", 1, 50).onChange((value) => {
     shaderMaterial.setFloat("highlightScale", value);
   });
-  gui.add(params, "colorScale", 1, 10.0).onChange((value) => {
+  shadeFolder.add(params, "colorScale", 1, 10.0).onChange((value) => {
     shaderMaterial.setFloat("colorScale", value);
   });
-  gui.add(params, "colorStrength", 0, 1.0).onChange((value) => {
+  shadeFolder.add(params, "colorStrength", 0, 1.0).onChange((value) => {
     shaderMaterial.setFloat("colorStrength", value);
   });
-  gui.add(params, "fresnelScale", 1, 10.0).onChange((value) => {
+  shadeFolder.add(params, "fresnelScale", 1, 10.0).onChange((value) => {
     shaderMaterial.setFloat("fresnelScale", value);
   });
-  gui.add(params, "fresnelStrength", 1, 10.0).onChange((value) => {
+
+  shadeFolder.add(params, "fresnelStrength", 1, 10.0).onChange((value) => {
     shaderMaterial.setFloat("fresnelStrength", value);
   });
-  gui.add(params, "transparency", 0, 1.0).onChange((value) => {
+  shadeFolder.add(params, "transparency", 0, 1.0).onChange((value) => {
     shaderMaterial.setFloat("transparency", value);
   });
-  gui.add(params, "transformStrength", 0, 1.0).onChange((value) => {
+
+  const shapeFolder = gui.addFolder("Shape");
+  shapeFolder.add(params, "transformStrength", 0, 1.0).onChange((value) => {
     shaderMaterial.setFloat("transformStrength", value);
+  });
+  shapeFolder.add(params, "transformSpeed", 0, 1.0).onChange((value) => {
+    shaderMaterial.setFloat("transformSpeed", value);
+  });
+  shapeFolder.add(params, "transformFrequency", 0, 1.0).onChange((value) => {
+    shaderMaterial.setFloat("transformFrequency", value);
+  });
+  shapeFolder.add(params, "scaleRangeMin", 0.01, 1.0).onChange((value) => {
+    params.scaleRangeMin = value;
+    sps.initParticles();
+  });
+  shapeFolder.add(params, "scaleRangeMax", 0.01, 1.0).onChange((value) => {
+    params.scaleRangeMax = value;
+    sps.initParticles();
   });
   //
 
@@ -173,12 +201,11 @@ export const customBabylonjsPipelineModule = async () => {
 
   bubble.meshes[1].material = shaderMaterial;
 
-  const bubblesCount = 50;
   //particleの準備
-  const sps = new BABYLON.SolidParticleSystem("SPS", scene, {
+  let sps = new BABYLON.SolidParticleSystem("SPS", scene, {
     useModelMaterial: true,
   });
-  sps.addShape(bubble.meshes[1], bubblesCount);
+  sps.addShape(bubble.meshes[1], 50);
 
   //SPSの設定
   sps.buildMesh();
@@ -192,23 +219,29 @@ export const customBabylonjsPipelineModule = async () => {
     // sps.particles[p].position.x = (Math.random() - 0.5) * 2.5;
     //   sps.particles[p].position.y = (Math.random() - 0.5) * 2.5;
     //   sps.particles[p].position.z = Math.random() + 1.0;
-    particle.position.x = (Math.random() - 0.5) * 2.5;
-    particle.position.y = (Math.random() - 0.5) * 2.5;
+    particle.position.x = (Math.random() - 0.5) * 1.5;
+    particle.position.y = Math.random() * 1.5;
     particle.position.z = Math.random() + 1.0;
 
-    // particle.velocity.x = (Math.random() - 0.5) * 0.0005;
-    particle.velocity.y = -Math.random() * 0.0015;
-    // particle.velocity.z = (Math.random() - 0.5) * 0.0005;
+    particle.velocity.x = 0; //(Math.random() - 0.5) * 0.00015;
+    particle.velocity.y = BABYLON.Scalar.Clamp(
+      -Math.random() * 0.0015,
+      -0.0015,
+      -0.0005
+    );
+    particle.velocity.z = 0;
 
     particle.rotation.x = Math.random() * Math.PI * 2;
     particle.rotation.y = Math.random() * Math.PI * 2;
     particle.rotation.z = Math.random() * Math.PI * 2;
 
-    const s = BABYLON.Scalar.RandomRange(0.1, 0.2);
+    const s = BABYLON.Scalar.RandomRange(
+      params.scaleRangeMin * 0.5,
+      params.scaleRangeMax * 0.5
+    );
     particle.scaling = new BABYLON.Vector3(s, s, s);
   };
 
-  let time = 0;
   sps.updateParticle = function (particle) {
     if (particle.position.y < -1.0) {
       sps.recycleParticle(particle);
@@ -217,6 +250,7 @@ export const customBabylonjsPipelineModule = async () => {
 
     //timeを更新
     time += 0.01;
+    shaderMaterial.setFloat("time", time);
 
     //particleのスケールを時経過間でpingpongさせる
     // const v = Math.sin(time * 0.02 + particle.idx) * 0.5 + 0.5;
@@ -228,20 +262,27 @@ export const customBabylonjsPipelineModule = async () => {
 
     //particleの速度を更新
     const value = noise.perlin2(particle.scaling.x * 50, time);
-    particle.velocity.x += value * 0.03 * 0.005;
-    particle.velocity.z += value * 0.03 * 0.005;
+    particle.velocity.x += value * 0.03 * 0.0025;
+    particle.velocity.z += value * 0.03 * 0.0005;
   };
 
   sps.initParticles = function () {
     for (let p = 0; p < sps.nbParticles; p++) {
-      sps.particles[p].position.x = (Math.random() - 0.5) * 2.5;
+      sps.particles[p].position.x = (Math.random() - 0.5) * 2.0;
       sps.particles[p].position.y = (Math.random() - 0.5) * 2.5;
       sps.particles[p].position.z = Math.random() + 1.0;
 
-      const s = BABYLON.Scalar.RandomRange(0.1, 0.2);
+      const s = BABYLON.Scalar.RandomRange(
+        params.scaleRangeMin * 0.5,
+        params.scaleRangeMax * 0.5
+      );
       sps.particles[p].scaling = new BABYLON.Vector3(s, s, s);
 
-      sps.particles[p].velocity.y = -Math.random() * 0.0015;
+      sps.particles[p].velocity.y = BABYLON.Scalar.Clamp(
+        -Math.random() * 0.0015,
+        -0.0015,
+        -0.0005
+      );
     }
   };
   sps.initParticles();
