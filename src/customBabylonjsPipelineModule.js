@@ -12,6 +12,11 @@ import envTextureUrl from "/textures/env.jpg";
 import bubbleModelUrl from "/models/uvSphereRe.glb";
 import cubeTextureUrl from "/cubeTexture/?url";
 
+import avatar01Url from "/models/avatar_1_low_anim.glb";
+import avatar02Url from "/models/avatar_2_low_anim.glb";
+import avatar03Url from "/models/avatar_3_low_anim.glb";
+import avatar04Url from "/models/avatar_4_low_anim.glb";
+
 const mapValue = (value, oldMin, oldMax, newMin, newMax) => {
   return newMin + (newMax - newMin) * ((value - oldMin) / (oldMax - oldMin));
 };
@@ -82,6 +87,13 @@ export const customBabylonjsPipelineModule = async () => {
   );
   light.intensity = 1.0;
   light.position = new BABYLON.Vector3(3, 5, 2);
+
+  //ambient light
+  const ambientLight = new BABYLON.HemisphericLight(
+    "ambientLight",
+    new BABYLON.Vector3(0, 1, 0),
+    scene
+  );
 
   //cubeTextureの読み込み
   const cubeTexture = new BABYLON.CubeTexture(cubeTextureUrl, scene);
@@ -286,6 +298,61 @@ export const customBabylonjsPipelineModule = async () => {
     }
   };
   sps.initParticles();
+
+  //avatarの追加
+  const avatarFolderName = avatar01Url
+    .split("/")
+    .slice(0, -1)
+    .join("/")
+    .concat("/");
+  const avatar01FileName = avatar01Url.split("/").slice(-1)[0];
+  const avatar02FileName = avatar02Url.split("/").slice(-1)[0];
+  const avatar03FileName = avatar03Url.split("/").slice(-1)[0];
+  const avatar04FileName = avatar04Url.split("/").slice(-1)[0];
+
+  BABYLON.SceneLoader.ImportMesh(
+    "",
+    avatarFolderName,
+    avatar01FileName,
+    scene,
+    function (meshes) {
+      meshes[0].scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
+      meshes[0].position = new BABYLON.Vector3(-0.35, 0, 1);
+    }
+  );
+
+  BABYLON.SceneLoader.ImportMesh(
+    "",
+    avatarFolderName,
+    avatar02FileName,
+    scene,
+    function (meshes) {
+      meshes[0].scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
+      meshes[0].position = new BABYLON.Vector3(-0.15, 0, 1.25);
+    }
+  );
+
+  BABYLON.SceneLoader.ImportMesh(
+    "",
+    avatarFolderName,
+    avatar03FileName,
+    scene,
+    function (meshes) {
+      meshes[0].scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
+      meshes[0].position = new BABYLON.Vector3(0.15, 0, 1.25);
+    }
+  );
+
+  BABYLON.SceneLoader.ImportMesh(
+    "",
+    avatarFolderName,
+    avatar04FileName,
+    scene,
+    function (meshes) {
+      meshes[0].scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
+      meshes[0].position = new BABYLON.Vector3(0.35, 0, 1);
+    }
+  );
 
   //for 8thwall
   camera.addBehavior(XR8.Babylonjs.xrCameraBehavior(), true);
