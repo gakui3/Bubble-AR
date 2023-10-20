@@ -85,7 +85,7 @@ void main(void) {
 
     //フレネル
     float rim1 = pow(1.0 - abs(dot(vWorldNormal, vCameraDirection)), 10.0-fresnelScale);
-    vec3 rimCol1 = vec3(1.0, 1.0, 1.0) * pow(rim1, 10.0-fresnelStrength);
+    vec3 rimCol1 = vec3(1.0, 1.0, 1.0) * fresnelStrength * rim1;//pow(rim1, 10.0-fresnelStrength);
     c += vec4(rimCol1, rim1);
     // c.a *= rim;
 

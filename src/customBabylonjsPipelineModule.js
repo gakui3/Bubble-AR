@@ -67,7 +67,7 @@ export const customBabylonjsPipelineModule = async () => {
     colorStrength: 0.23,
     transparency: 0.4,
     fresnelScale: 5.3,
-    fresnelStrength: 6.0,
+    fresnelStrength: 0.25,
     transformStrength: 0.45,
     transformSpeed: 0.3,
     transformFrequency: 0.5,
@@ -170,7 +170,7 @@ export const customBabylonjsPipelineModule = async () => {
     shaderMaterial.setFloat("fresnelScale", value);
   });
 
-  shadeFolder.add(params, "fresnelStrength", 1, 10.0).onChange((value) => {
+  shadeFolder.add(params, "fresnelStrength", 0, 1.0).onChange((value) => {
     shaderMaterial.setFloat("fresnelStrength", value);
   });
   shadeFolder.add(params, "transparency", 0, 1.0).onChange((value) => {
