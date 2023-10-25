@@ -65,7 +65,7 @@ export const customBabylonjsPipelineModule = async () => {
     highlightScale: 16.5,
     colorScale: 5.0,
     colorStrength: 0.23,
-    transparency: 0.4,
+    transparency: 0.25,
     fresnelScale: 5.1,
     fresnelStrength: 0.3,
     transformStrength: 0.45,
